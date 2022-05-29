@@ -1,8 +1,8 @@
 ---
-version: '3'
+version: '3.4'
 
-x-airflow-common:
-  &airflow-common
+x-common:
+  &common
   image: apache/airflow:2.3.0
   user: "${AIRFLOW_UID}:0"
   env_file: 
@@ -13,8 +13,8 @@ x-airflow-common:
     - ./plugins:/opt/airflow/plugins
     - /var/run/docker.sock:/var/run/docker.sock
 
-x-airflow-common-depends-on:
-  &airflow-common-depends-on
+x-depends-on:
+  &depends-on
   depends_on:
     postgres:
       condition: service_healthy
@@ -35,8 +35,8 @@ services:
       - .env
 
   scheduler:
-    <<: *airflow-common
-    <<: *airflow-common-depends-on
+    <<: *common
+    <<: *depends-on
     container_name: airflow-scheduler
     command: scheduler
     restart: on-failure
@@ -44,8 +44,8 @@ services:
       - "8793:8793"
 
   webserver:
-    <<: *airflow-common
-    <<: *airflow-common-depends-on
+    <<: *common
+    <<: *depends-on
     container_name: airflow-webserver
     restart: always
     command: webserver
@@ -58,7 +58,7 @@ services:
       retries: 5
   
   airflow-init:
-    <<: *airflow-common
+    <<: *common
     container_name: airflow-init
     entrypoint: /bin/bash
     command:
