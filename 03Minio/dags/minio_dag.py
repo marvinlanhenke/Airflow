@@ -5,8 +5,6 @@ from airflow.providers.amazon.aws.hooks.s3 import S3Hook
 
 from datetime import datetime
 
-# {"aws_access_key_id": "minioadmin", "aws_secret_access_key": "minioadmin", "host": "http://minio:9000"}
-
 def _write_file_to_bucket():
     filename = '/tmp/test-file.txt'
 
